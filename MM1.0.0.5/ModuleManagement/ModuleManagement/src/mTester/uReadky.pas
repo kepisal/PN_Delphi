@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls, uMethod, Grids, Seed, Menus,StrUtils,AddKey;
+  Dialogs, StdCtrls, ComCtrls, uMethod, Grids, Seed, Menus,StrUtils,AddKey,ShellAPI;
 
 type
   Tfrmkey = class(TForm)

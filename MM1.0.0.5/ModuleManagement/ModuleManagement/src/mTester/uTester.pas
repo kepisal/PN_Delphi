@@ -287,7 +287,9 @@ begin
       begin
                     // A.kha 85569272102 160689
 
+
         mExecute := mExecute + ' "' + Trim(Self.Caption) + '"' + ' "' + Trim(aParam) + '"';
+              ShowMessage(mExecute);
         _ExecuteAndWait(mExecute); //Execute one by one
 
 
@@ -725,7 +727,6 @@ procedure TfrmScrappingTestApp.AutoRun1Click(Sender: TObject);
 var
   fln:String;
 begin
-  
   frmTaskSchedule1.Show();
 end;
 

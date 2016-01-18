@@ -36,6 +36,13 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Font.Style = []
       ParentFont = False
     end
+    object Label2: TLabel
+      Left = 96
+      Top = 216
+      Width = 40
+      Height = 13
+      Caption = 'On day :'
+    end
     object rgOption: TRadioGroup
       Left = 8
       Top = 48
@@ -62,8 +69,15 @@ object frmTaskSchedule1: TfrmTaskSchedule1
         Height = 13
         Caption = 'Start:'
       end
+      object Label1: TLabel
+        Left = 8
+        Top = 72
+        Width = 28
+        Height = 13
+        Caption = 'Day  :'
+      end
       object dtpDateTime: TDateTimePicker
-        Left = 48
+        Left = 72
         Top = 16
         Width = 121
         Height = 21
@@ -71,78 +85,30 @@ object frmTaskSchedule1: TfrmTaskSchedule1
         Time = 42384.978932777780000000
         TabOrder = 0
       end
-      object grpCheckDay: TGroupBox
-        Left = 0
-        Top = 56
-        Width = 329
-        Height = 105
-        Caption = 'Multi-option'
-        TabOrder = 1
-        object chkMon: TCheckBox
-          Left = 8
-          Top = 24
-          Width = 97
-          Height = 17
-          Caption = 'Monday'
-          TabOrder = 0
-        end
-        object chkTues: TCheckBox
-          Left = 72
-          Top = 24
-          Width = 97
-          Height = 17
-          Caption = 'Tuesday'
-          TabOrder = 1
-        end
-        object chkWed: TCheckBox
-          Left = 144
-          Top = 24
-          Width = 97
-          Height = 17
-          Caption = 'Wednesday'
-          TabOrder = 2
-        end
-        object chkThur: TCheckBox
-          Left = 232
-          Top = 24
-          Width = 97
-          Height = 17
-          Caption = 'Thurday'
-          TabOrder = 3
-        end
-        object chkFri: TCheckBox
-          Left = 8
-          Top = 64
-          Width = 97
-          Height = 17
-          Caption = 'Friady'
-          TabOrder = 4
-        end
-        object chkSat: TCheckBox
-          Left = 72
-          Top = 64
-          Width = 97
-          Height = 17
-          Caption = 'Saturday'
-          TabOrder = 5
-        end
-        object chkSun: TCheckBox
-          Left = 144
-          Top = 64
-          Width = 97
-          Height = 17
-          Caption = 'Sunday'
-          TabOrder = 6
-        end
-      end
       object dtpTime: TDateTimePicker
-        Left = 176
+        Left = 200
         Top = 16
         Width = 114
         Height = 21
         Date = 42386.370738182870000000
         Time = 42386.370738182870000000
         Kind = dtkTime
+        TabOrder = 1
+      end
+      object CheckListBox1: TCheckListBox
+        Left = 72
+        Top = 72
+        Width = 241
+        Height = 81
+        ItemHeight = 13
+        Items.Strings = (
+          'MONDAY'
+          'TUESDAY'
+          'WEDNESDAY'
+          'THURDAY'
+          'FRIDAY'
+          'SATURDAY'
+          'SUNDAY')
         TabOrder = 2
       end
     end
@@ -153,6 +119,7 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Height = 21
       ItemHeight = 13
       TabOrder = 2
+      OnChange = cbbBeginTaskChange
       Items.Strings = (
         'On a Schedule'
         'At log on'
@@ -175,6 +142,14 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Caption = 'Cancel'
       TabOrder = 4
       OnClick = btnCancelClick
+    end
+    object edtOnDay: TEdit
+      Left = 144
+      Top = 216
+      Width = 65
+      Height = 21
+      TabOrder = 5
+      OnKeyPress = edtOnDayKeyPress
     end
   end
 end

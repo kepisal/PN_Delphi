@@ -2,7 +2,6 @@ object frmlogin: Tfrmlogin
   Left = 526
   Top = 282
   BorderStyle = bsDialog
-  Caption = 'Log In'
   ClientHeight = 230
   ClientWidth = 258
   Color = clBtnFace

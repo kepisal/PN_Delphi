@@ -11,7 +11,8 @@ uses
   uTMR in 'uTMR.pas' {frmTMR},
   ufrmInformation in 'ufrmInformation.pas' {frmInformation},
   ufrmSignup in 'ufrmSignup.pas' {frmsignup},
-  uTaskSchedule in 'uTaskSchedule.pas' {frmTaskSchedule1};
+  uTaskSchedule in 'uTaskSchedule.pas' {frmTaskSchedule1},
+  test in 'test.pas' {Form1};
 
 begin
   Application.Initialize;
@@ -26,5 +27,6 @@ begin
   Application.CreateForm(TfrmInformation, frmInformation);
   Application.CreateForm(Tfrmsignup, frmsignup);
   Application.CreateForm(TfrmTaskSchedule1, frmTaskSchedule1);
+  Application.CreateForm(TForm1, Form1);
   Application.Run;
 end.

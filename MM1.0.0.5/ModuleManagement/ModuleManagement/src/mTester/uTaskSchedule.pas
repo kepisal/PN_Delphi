@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, StdCtrls, ExtCtrls, CommCtrl,uMethod;
+  Dialogs, ComCtrls, StdCtrls, ExtCtrls, CommCtrl,uMethod,shellAPI,
+  CheckLst;
 
 type
   TfrmTaskSchedule1 = class(TForm)
@@ -17,20 +18,18 @@ type
     lbl1: TLabel;
     btnOk: TButton;
     btnCancel: TButton;
-    grpCheckDay: TGroupBox;
-    chkMon: TCheckBox;
-    chkTues: TCheckBox;
-    chkWed: TCheckBox;
-    chkThur: TCheckBox;
-    chkFri: TCheckBox;
-    chkSat: TCheckBox;
-    chkSun: TCheckBox;
     dtpTime: TDateTimePicker;
+    CheckListBox1: TCheckListBox;
+    Label1: TLabel;
+    edtOnDay: TEdit;
+    Label2: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure rgOptionClick(Sender: TObject);
     function  createTasks(index:Byte):String;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
+    procedure cbbBeginTaskChange(Sender: TObject);
+    procedure edtOnDayKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
   public
@@ -40,31 +39,41 @@ type
 var
   frmTaskSchedule1: TfrmTaskSchedule1;
   DayPicker:String;
-  
+
 
 implementation
 
 uses DateUtils;
-
+var
+  TN:String='MTester';
 {$R *.dfm}
+function getValueComboBox(index:Integer):String;
+var
+  temp:String;
+begin
+  case index of
+  0 : temp:=' ';
+  1 : temp:='ONLOGON';
+  2 : temp:='ONSTART';
+  end;
+end;
 
 procedure TfrmTaskSchedule1.FormCreate(Sender: TObject);
 begin
-  chkMon.Enabled:=false;
-  chkTues.Enabled:=False;
-  chkWed.Enabled:=False;
-  chkThur.Enabled:=False;
-  chkFri.Enabled:=False;
-  chkSat.Enabled:=False;
-  chkSun.Enabled:=False;
-  
+  CheckListBox1.Enabled:=false;
+  edtOnDay.Enabled:=false;
+  rgOption.Enabled:=false;
+  dtpDateTime.Enabled:=false;
+  dtpTime.Enabled:=false;
+  btnOk.Enabled:=False;
 end;
 function getOption(index:Integer):string;
 var
   temp:String;
 begin
+  temp:=' ';
   case index of
-  0:temp:='';
+  0:temp:='ONCE';
   1:temp:='DAILY';
   2:temp:='WEEKLY';
   3:temp:='MONTHLY';
@@ -76,22 +85,18 @@ procedure TfrmTaskSchedule1.rgOptionClick(Sender: TObject);
 begin
   if (rgOption.ItemIndex = 2) then
   begin
-    chkMon.Enabled:=Enabled;
-  chkTues.Enabled:=Enabled;
-  chkWed.Enabled:=Enabled;
-  chkThur.Enabled:=Enabled;
-  chkFri.Enabled:=Enabled;
-  chkSat.Enabled:=Enabled;
-  chkSun.Enabled:=Enabled;
+    CheckListBox1.Enabled:=True;
   end else
   begin
-    chkMon.Enabled:=false;
-  chkTues.Enabled:=False;
-  chkWed.Enabled:=False;
-  chkThur.Enabled:=False;
-  chkFri.Enabled:=False;
-  chkSat.Enabled:=False;
-  chkSun.Enabled:=False;
+    CheckListBox1.Enabled:=false;
+  end;
+
+  if (rgOption.ItemIndex = 3) then
+  begin
+    edtOnDay.Enabled:=True;
+  end else
+  begin
+    edtOnDay.Enabled:=false;
   end;
 end;
 
@@ -106,29 +111,135 @@ begin
   if (SameText(zone,'PM')) then
   begin
     if H=12 then
-      H:=$00
+      H:=12
     else
-      H:=H+12;
+    begin H:=H+12;
+    temp:=IntToStr(H)+':'+temp; end;
+  end else
+  begin
+    if H<10 then
+    begin temp:='0'+IntToStr(H)+':'+temp; end
+    else
+    begin temp:=IntToStr(H)+':'+temp; end;
   end;
-  temp:=IntToStr(H)+':'+temp;
+  Result:=temp;
 end;
+function GetSelectedCheckboxValue(CheckListBox: TCheckListBox): string;
+var
+  i: Integer;
+begin
+  Result := '';
+
+  for i := 0 to CheckListBox.Count - 1 do
+  begin
+    if CheckListBox.Checked[i] then
+      Result := Result +Copy(CheckListBox.Items[i],0,3)+',';
+  end;
+  Result:=copy(Result,0,Length(result)-1);
+end;
+
+
+
 function TfrmTaskSchedule1.createTasks(index:Byte):String;
 var
-  temp,sdate,stime,zone:String;
+  temp,sdate,stime,zone,fln,daychecked:String;
+  i,j,buttonSelected :Integer;
+  test:Cardinal;
+
 begin
-  
+  fln:=Application.ExeName;
+  //ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC DAILY /TN "'+TN+'" /TR "'+fln+'" /ST 00:00 /f'),nil,SW_HIDE); // Deleted Task Existed
+  Sleep(1000);
+  stime:=ConvertTime12To24(TimeToStr(dtpTime.time));
+  sdate:=DateToStr(dtpDateTime.Date);
+
+case index of
+  0: begin // one time
+      buttonSelected := messagedlg('Task Updated : '+getOption(index)+' '+sdate+' '+stime,mtWarning, mbOKCancel, 0);
+      if buttonSelected = mrOK then
+        begin
+         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getOption(index)+' '+getValueComboBox(cbbBeginTask.ItemIndex)+' /TN "'+TN+'" /TR "'+fln+'" /ST '+stime+' /f'),nil,SW_HIDE);
+        end;
+      end;
+  1: begin // DAILY time
+    buttonSelected := messagedlg('Task Updated : '+getOption(index)+' '+stime,mtWarning, mbOKCancel, 0);
+      if buttonSelected = mrOK then
+      begin
+        //ShowMessage('/Create /SC '+getOption(index)+' /TN "'+TN+'" /TR "'+fln+'" /ST '+stime+' /f');
+         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getOption(index)+' /TN "'+TN+'" /TR "'+fln+'" /ST '+stime+' /f'),nil,SW_HIDE);
+      end;
+  end;
+  2: begin // WEEKLY time
+    buttonSelected := messagedlg('Task Updated : '+getOption(index)+' '+GetSelectedCheckboxValue(CheckListBox1)+' '+stime,mtWarning, mbOKCancel, 0);
+      if buttonSelected = mrOK then
+      begin
+         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getOption(index)+' /D '+GetSelectedCheckboxValue(CheckListBox1)+' /TN "'+TN+'" /TR "'+fln+'" /ST '+stime+' /f'),nil,SW_HIDE);
+         //SchTasks /Create /SC WEEKLY /D MON,TUE,WED,THU,FRI /TN “My Task” /TR “C:RunMe.bat” /ST 14:00
+      end;
+    end;
+  3: begin // MONTHLY time
+    buttonSelected := messagedlg('Task Updated : '+getOption(index)+' '+GetSelectedCheckboxValue(CheckListBox1)+' '+stime,mtWarning, mbOKCancel, 0);
+      if buttonSelected = mrOK then
+      begin
+         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getOption(index)+' /D '+edtOnDay.Text+' /TN "'+TN+'" /TR "'+fln+'" /ST '+stime+' /f'),nil,SW_HIDE);
+         //SchTasks /Create /SC WEEKLY /D MON,TUE,WED,THU,FRI /TN “My Task” /TR “C:RunMe.bat” /ST 14:00
+      end;
+    end;
+  end;
+//end;
 end;
 procedure TfrmTaskSchedule1.btnOkClick(Sender: TObject);
-var fln:String;
+var
+    buttonSelected : Integer;
 begin
-  {fln:=Application.ExeName;
-  ShellExecute(0,'runas','schtasks',pansichar('/Create /SC DAILY /TN MTester /TR '+fln+' /ST 22:45'),nil,SW_HIDE);
-  Application.Terminate;}
+  if(Length(edtOnDay.Text)>2) and (StrToInt(edtOnDay.Text)>28) then
+  begin
+    ShowMessage('On Day of Monthly should Lower than 28');
+  end else
+  begin
+  ShowMessage(createTasks(rgOption.ItemIndex));
+  end;
 end;
 
 procedure TfrmTaskSchedule1.btnCancelClick(Sender: TObject);
 begin
   Self.Close;
+end;
+
+procedure TfrmTaskSchedule1.cbbBeginTaskChange(Sender: TObject);
+var i:Byte;
+begin
+  i:=cbbBeginTask.ItemIndex;
+  if i= 0 then
+  begin
+    rgOption.Enabled:=True;
+    dtpDateTime.Enabled:=True;
+    dtpTime.Enabled:=True;
+    btnOk.Enabled:=True;
+  end
+  else if i = 1 then
+  begin
+    rgOption.Enabled:=false;
+    dtpDateTime.Enabled:=false;
+    dtpTime.Enabled:=false;
+    btnOk.Enabled:=true;
+  end
+  else if i = 2 then
+  begin
+    rgOption.Enabled:=false;
+    dtpDateTime.Enabled:=false;
+    dtpTime.Enabled:=false;
+    btnOk.Enabled:=true;
+  end
+
+end;
+
+procedure TfrmTaskSchedule1.edtOnDayKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if not (Key in [#8, '0'..'9', DecimalSeparator]) then begin
+    ShowMessage('Invalid Key. Number only');
+  end;
 end;
 
 end.
