@@ -1,6 +1,6 @@
 object frmTaskSchedule1: TfrmTaskSchedule1
-  Left = 600
-  Top = 222
+  Left = 557
+  Top = 224
   BorderStyle = bsDialog
   Caption = 'Task Schedule'
   ClientHeight = 271
@@ -71,23 +71,13 @@ object frmTaskSchedule1: TfrmTaskSchedule1
         Time = 42384.978932777780000000
         TabOrder = 0
       end
-      object dtpTimePicker: TDateTimePicker
-        Left = 176
-        Top = 16
-        Width = 129
-        Height = 21
-        Date = 42384.978932777780000000
-        Time = 42384.978932777780000000
-        Kind = dtkTime
-        TabOrder = 1
-      end
       object grpCheckDay: TGroupBox
         Left = 0
         Top = 56
         Width = 329
         Height = 105
         Caption = 'Multi-option'
-        TabOrder = 2
+        TabOrder = 1
         object chkMon: TCheckBox
           Left = 8
           Top = 24
@@ -145,6 +135,16 @@ object frmTaskSchedule1: TfrmTaskSchedule1
           TabOrder = 6
         end
       end
+      object dtpTime: TDateTimePicker
+        Left = 176
+        Top = 16
+        Width = 114
+        Height = 21
+        Date = 42386.370738182870000000
+        Time = 42386.370738182870000000
+        Kind = dtkTime
+        TabOrder = 2
+      end
     end
     object cbbBeginTask: TComboBox
       Left = 96
@@ -174,6 +174,7 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Height = 25
       Caption = 'Cancel'
       TabOrder = 4
+      OnClick = btnCancelClick
     end
   end
 end

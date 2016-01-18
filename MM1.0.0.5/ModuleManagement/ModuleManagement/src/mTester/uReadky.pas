@@ -56,7 +56,8 @@ var
   F: TextFile;
 begin
   fullFileName:=Application.ExeName;
-  fullFileName:=ExtractFilePath  (fullFileName)+FileName;
+  fullFileName:=ExtractFilePath(fullFileName)+FileName;
+  //ShowMessage(fullFileName);
   AssignFile(F, fullFileName);
   // Reopen the file for reading
   Reset(F);
@@ -67,10 +68,9 @@ begin
     ReadLn(F, text);
     temp := temp + text;
   end;
-
   // Close the file for the last time
   CloseFile(F);
-  Result := SeedDecFromBase64(fullFileName, temp);
+  Result := SeedDecFromBase64(FileName, temp);
 end;
 
 //-----------------
@@ -103,7 +103,6 @@ var
   NewColumn: TListColumn;
   ListItem: TListItem;
 begin
-    
   i := 1;
   j:=1;
 

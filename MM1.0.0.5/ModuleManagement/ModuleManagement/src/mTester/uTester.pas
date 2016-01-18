@@ -576,38 +576,33 @@ begin
 end;
 
 procedure TfrmScrappingTestApp.lvModuleListClick(Sender: TObject);
+const
+  LparamCol = 62;
+  RparamCol = 75;
+  RResultCol = 88;
 var
   pt: TPoint;
-//  info: string;
   keyerr: string;
-  i: integer;
-  sc1,sc2,sc3:Integer;
+  i,lvw,paramPoint: integer;
 begin
-  sc1:=0;
-  sc2:=0;
-  sc3:=0;
   try
     pt := lvModuleList.ScreenToClient(mouse.cursorpos);
+    lvw := lvModuleList.Width;
+    paramPoint := Round((pt.x * 100) / lvw);
     if lvModuleList.Items.Count > 0 then
     begin
-      {* Screen Size Detection *}
-      //ShowMessage(IntToStr(pt.X));
-      case sc_width of
-      1920 :begin sc1:= 888; sc2:= 1035; sc3:= 728; end;
-      1600 :begin sc1:= 721; sc2:=841;sc3:=591; end;
-      1440 :begin sc1:= 719; sc2:= 840; sc3:= 591; end;
-      1366 :begin sc1:= 730; sc2:= 890; sc3:= 1036; end;
-      end;
+      if (paramPoint > LparamCol) and (paramPoint < RparamCol) then  // Param Col
+       begin
+        clsParam := TParam.Create(nil);
+        lvModuleList.Selected.SubItems[4] := clsParam.GetParam(lvModuleList.Selected.SubItems[4]);
+        FreeAndNil(clsParam);
 
-
-      if ((pt.x >= sc1) and (pt.x <= sc2)) then
-      begin
-
-        clsResult := TResult.Create(nil);
+       end else if (paramPoint > RparamCol) and (paramPoint < RResultCol) then // Result col
+       begin
+          clsResult := TResult.Create(nil);
         if (CompareStr(lvModuleList.Selected.SubItems[5], IntToHex(S_M_OK, 8)) <> 0) then
         begin
           keyerr := lvModuleList.Selected.SubItems[5]; // parse value to Readkey error form
-            //ShowMessage(keyerr);
           for i := 1 to frmkey.gridview1.RowCount - 1 do
           begin
             if SameText(frmkey.gridview1.Cells[1, i], keyerr) then
@@ -617,19 +612,13 @@ begin
               break;
             end;
           end;
-        end
-        else
+          //ShowMessage(keyerr);
+        end else
         begin
           clsResult.ShowResult(dclTemDataStr[lvModuleList.Selected.Index]);
         end;
         FreeAndNil(clsResult);
-      end
-      else if ((pt.x >= sc3) and (pt.x <= sc2)) then
-      begin
-        clsParam := TParam.Create(nil);
-        lvModuleList.Selected.SubItems[4] := clsParam.GetParam(lvModuleList.Selected.SubItems[4]);
-        FreeAndNil(clsParam);
-      end;
+       end;
 
     end;
   except
@@ -724,7 +713,6 @@ end;
 
 procedure TfrmScrappingTestApp.FormCreate(Sender: TObject);
 begin
-  sc_width:=Screen.Width;
   btnMEdit.Enabled:=False;
 end;
 
@@ -737,9 +725,7 @@ procedure TfrmScrappingTestApp.AutoRun1Click(Sender: TObject);
 var
   fln:String;
 begin
-  {fln:=Application.ExeName;
-  ShellExecute(0,'runas','schtasks',pansichar('/Create /SC DAILY /TN MTester /TR '+fln+' /ST 22:45'),nil,SW_HIDE);
-  Application.Terminate;}
+  
   frmTaskSchedule1.Show();
 end;
 

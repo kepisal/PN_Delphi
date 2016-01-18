@@ -28,7 +28,6 @@ implementation
 
 procedure TResult.ShowResult(const ResultStr: String);
 begin
-    ShowMessage('Result'+Application.ExeName);
   mResult.Lines.Clear;
   mResult.Lines.Add(ResultStr);
   mResult.SelStart := 0;
