@@ -191,9 +191,9 @@ var
     buttonSelected : Integer;
 begin
   case cbbBeginTask.ItemIndex of
-  0 : begin ShowMessage(createTasks(rgOption.ItemIndex)); end;
-  1 : begin ShowMessage(createTasks(3));end;
-  2 : begin ShowMessage(createTasks(4));end;
+  0 : begin createTasks(rgOption.ItemIndex); end;
+  1 : begin createTasks(3);end;
+  2 : begin createTasks(4);end;
   end;
 end;
 
