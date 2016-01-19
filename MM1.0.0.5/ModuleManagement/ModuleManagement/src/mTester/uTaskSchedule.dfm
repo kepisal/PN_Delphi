@@ -1,5 +1,5 @@
 object frmTaskSchedule1: TfrmTaskSchedule1
-  Left = 557
+  Left = 734
   Top = 224
   BorderStyle = bsDialog
   Caption = 'Task Schedule'
@@ -36,13 +36,6 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Font.Style = []
       ParentFont = False
     end
-    object Label2: TLabel
-      Left = 96
-      Top = 216
-      Width = 40
-      Height = 13
-      Caption = 'On day :'
-    end
     object rgOption: TRadioGroup
       Left = 8
       Top = 48
@@ -51,8 +44,7 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Items.Strings = (
         'One Time'
         'Daily'
-        'Weekly'
-        'Monthly')
+        'Weekly')
       TabOrder = 0
       OnClick = rgOptionClick
     end
@@ -142,14 +134,6 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Caption = 'Cancel'
       TabOrder = 4
       OnClick = btnCancelClick
-    end
-    object edtOnDay: TEdit
-      Left = 144
-      Top = 216
-      Width = 65
-      Height = 21
-      TabOrder = 5
-      OnKeyPress = edtOnDayKeyPress
     end
   end
 end

@@ -1,5 +1,5 @@
 object frmScrappingTestApp: TfrmScrappingTestApp
-  Left = 335
+  Left = 55
   Top = 14
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle

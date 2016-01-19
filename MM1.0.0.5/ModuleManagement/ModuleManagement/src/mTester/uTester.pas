@@ -289,7 +289,6 @@ begin
 
 
         mExecute := mExecute + ' "' + Trim(Self.Caption) + '"' + ' "' + Trim(aParam) + '"';
-              ShowMessage(mExecute);
         _ExecuteAndWait(mExecute); //Execute one by one
 
 

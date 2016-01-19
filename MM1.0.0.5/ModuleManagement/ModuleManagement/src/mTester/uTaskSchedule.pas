@@ -21,15 +21,12 @@ type
     dtpTime: TDateTimePicker;
     CheckListBox1: TCheckListBox;
     Label1: TLabel;
-    edtOnDay: TEdit;
-    Label2: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure rgOptionClick(Sender: TObject);
     function  createTasks(index:Byte):String;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure cbbBeginTaskChange(Sender: TObject);
-    procedure edtOnDayKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
   public
@@ -51,17 +48,18 @@ function getValueComboBox(index:Integer):String;
 var
   temp:String;
 begin
+
   case index of
   0 : temp:=' ';
   1 : temp:='ONLOGON';
   2 : temp:='ONSTART';
   end;
+  Result:=temp;
 end;
 
 procedure TfrmTaskSchedule1.FormCreate(Sender: TObject);
 begin
   CheckListBox1.Enabled:=false;
-  edtOnDay.Enabled:=false;
   rgOption.Enabled:=false;
   dtpDateTime.Enabled:=false;
   dtpTime.Enabled:=false;
@@ -89,14 +87,6 @@ begin
   end else
   begin
     CheckListBox1.Enabled:=false;
-  end;
-
-  if (rgOption.ItemIndex = 3) then
-  begin
-    edtOnDay.Enabled:=True;
-  end else
-  begin
-    edtOnDay.Enabled:=false;
   end;
 end;
 
@@ -177,11 +167,19 @@ case index of
          //SchTasks /Create /SC WEEKLY /D MON,TUE,WED,THU,FRI /TN “My Task” /TR “C:RunMe.bat” /ST 14:00
       end;
     end;
-  3: begin // MONTHLY time
-    buttonSelected := messagedlg('Task Updated : '+getOption(index)+' '+GetSelectedCheckboxValue(CheckListBox1)+' '+stime,mtWarning, mbOKCancel, 0);
+  3: begin // ON LOGON
+    buttonSelected := messagedlg('Task Updated : '+getValueComboBox(cbbBeginTask.ItemIndex),mtWarning, mbOKCancel, 0);
       if buttonSelected = mrOK then
       begin
-         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getOption(index)+' /D '+edtOnDay.Text+' /TN "'+TN+'" /TR "'+fln+'" /ST '+stime+' /f'),nil,SW_HIDE);
+         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getValueComboBox(cbbBeginTask.ItemIndex)+' /TN "'+TN+'" /TR "'+fln+'" /f'),nil,SW_HIDE);
+         //SchTasks /Create /SC WEEKLY /D MON,TUE,WED,THU,FRI /TN “My Task” /TR “C:RunMe.bat” /ST 14:00
+      end;
+    end;
+  4: begin // ONSTART
+    buttonSelected := messagedlg('Task Updated : '+getValueComboBox(cbbBeginTask.ItemIndex),mtWarning, mbOKCancel, 0);
+      if buttonSelected = mrOK then
+      begin
+         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getValueComboBox(cbbBeginTask.ItemIndex)+' /TN "'+TN+'" /TR "'+fln+'" /RU "System" /f'),nil,SW_HIDE);
          //SchTasks /Create /SC WEEKLY /D MON,TUE,WED,THU,FRI /TN “My Task” /TR “C:RunMe.bat” /ST 14:00
       end;
     end;
@@ -192,12 +190,10 @@ procedure TfrmTaskSchedule1.btnOkClick(Sender: TObject);
 var
     buttonSelected : Integer;
 begin
-  if(Length(edtOnDay.Text)>2) and (StrToInt(edtOnDay.Text)>28) then
-  begin
-    ShowMessage('On Day of Monthly should Lower than 28');
-  end else
-  begin
-  ShowMessage(createTasks(rgOption.ItemIndex));
+  case cbbBeginTask.ItemIndex of
+  0 : begin ShowMessage(createTasks(rgOption.ItemIndex)); end;
+  1 : begin ShowMessage(createTasks(3));end;
+  2 : begin ShowMessage(createTasks(4));end;
   end;
 end;
 
@@ -233,13 +229,4 @@ begin
   end
 
 end;
-
-procedure TfrmTaskSchedule1.edtOnDayKeyPress(Sender: TObject;
-  var Key: Char);
-begin
-  if not (Key in [#8, '0'..'9', DecimalSeparator]) then begin
-    ShowMessage('Invalid Key. Number only');
-  end;
-end;
-
 end.
