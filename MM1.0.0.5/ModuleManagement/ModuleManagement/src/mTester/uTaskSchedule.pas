@@ -36,7 +36,7 @@ type
 var
   frmTaskSchedule1: TfrmTaskSchedule1;
   DayPicker:String;
-
+  localTime:TDateTime;
 
 implementation
 
@@ -137,6 +137,7 @@ var
   test:Cardinal;
 
 begin
+  localTime:=Now;
   fln:=Application.ExeName;
   //ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC DAILY /TN "'+TN+'" /TR "'+fln+'" /ST 00:00 /f'),nil,SW_HIDE); // Deleted Task Existed
   Sleep(1000);
@@ -177,10 +178,13 @@ case index of
     end;
   4: begin // ONSTART
     buttonSelected := messagedlg('Task Updated : '+getValueComboBox(cbbBeginTask.ItemIndex),mtWarning, mbOKCancel, 0);
+    temp:= GetEnvironmentVariable('COMPUTERNAME');
+    temp := temp+'\'+ GetEnvironmentVariable('USERNAME');
+    ShowMessage(temp);
       if buttonSelected = mrOK then
       begin
-         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getValueComboBox(cbbBeginTask.ItemIndex)+' /TN "'+TN+'" /TR "'+fln+'" /RU "System" /f'),nil,SW_HIDE);
-         //SchTasks /Create /SC WEEKLY /D MON,TUE,WED,THU,FRI /TN “My Task” /TR “C:RunMe.bat” /ST 14:00
+         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getValueComboBox(cbbBeginTask.ItemIndex)+' /TN "'+TN+'" /TR "'+fln+'" /RU '+temp+' /f'),nil,SW_HIDE);
+         //schtasks /create /sc onstart /tn "home" /tr "c:\..\M" /ru Pisal-PC\Pisal /f
       end;
     end;
   end;
