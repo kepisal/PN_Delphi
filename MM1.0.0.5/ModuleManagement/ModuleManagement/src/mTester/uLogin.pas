@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, uMethod, uTester, seed,ufrmSignup;
+  Dialogs, StdCtrls, uMethod, uTester, seed,ufrmSignup,EASendMailObjLib_TLB,uYahooMail;
 
 type
   Tfrmlogin = class(TForm)

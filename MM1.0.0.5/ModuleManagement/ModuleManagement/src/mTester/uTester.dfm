@@ -1,16 +1,11 @@
 object frmScrappingTestApp: TfrmScrappingTestApp
-  Left = 335
-  Top = 14
+  Left = 288
+  Top = 130
+  Width = 1110
+  Height = 687
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsSingle
   Caption = 'Scrape Module Application Management'
-  ClientHeight = 583
-  ClientWidth = 967
   Color = clWhite
-  Constraints.MaxHeight = 641
-  Constraints.MaxWidth = 983
-  Constraints.MinHeight = 612
-  Constraints.MinWidth = 812
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -305,9 +300,9 @@ object frmScrappingTestApp: TfrmScrappingTestApp
       end
     end
     object btnStart: TButton
-      Left = 660
+      Left = 880
       Top = 12
-      Width = 107
+      Width = 71
       Height = 60
       Caption = 'Start'
       TabOrder = 3
@@ -360,6 +355,30 @@ object frmScrappingTestApp: TfrmScrappingTestApp
         TabOrder = 1
       end
     end
+    object grpOpiton: TGroupBox
+      Left = 656
+      Top = 8
+      Width = 217
+      Height = 66
+      Caption = 'Option'
+      TabOrder = 6
+      object chkMail: TCheckBox
+        Left = 8
+        Top = 32
+        Width = 65
+        Height = 17
+        Caption = 'Mail To   : '
+        TabOrder = 0
+        OnClick = chkMailClick
+      end
+      object edtMail: TEdit
+        Left = 80
+        Top = 29
+        Width = 129
+        Height = 21
+        TabOrder = 1
+      end
+    end
   end
   object MainMenu1: TMainMenu
     Left = 1192
@@ -388,13 +407,13 @@ object frmScrappingTestApp: TfrmScrappingTestApp
     end
     object Help1: TMenuItem
       Caption = 'Help'
-      object Keyerror1: TMenuItem
-        Caption = 'Key error'
-        OnClick = Keyerror1Click
-      end
       object AutoRun1: TMenuItem
         Caption = 'Task Schedule'
         OnClick = AutoRun1Click
+      end
+      object Keyerror1: TMenuItem
+        Caption = 'Key error'
+        OnClick = Keyerror1Click
       end
       object version1: TMenuItem
         Caption = 'Version'

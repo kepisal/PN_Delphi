@@ -58,7 +58,8 @@ interface
 uses
   Windows, Messages, SysUtils, Forms, Dialogs, Classes, ExtCtrls, Controls,
   IniFiles, StdCtrls, ComCtrls, Menus, uMethod, Seed, mTypes, Grids, ValEdit,
-  aResult, mParam, uReadky, ufrmInformation,uWebagent,GetKHAVersion,uMethododl,ShellAPI,uTaskSchedule;
+  aResult, mParam, uReadky, ufrmInformation,uWebagent,GetKHAVersion,uMethododl,ShellAPI,uTaskSchedule,uYahooMail,EASendMailObjLib_TLB,
+  CheckLst;
 
 const
   // Send Message Codes to perform each task
@@ -117,6 +118,9 @@ type
     btnMEdit: TButton;
     version1: TMenuItem;
     AutoRun1: TMenuItem;
+    grpOpiton: TGroupBox;
+    chkMail: TCheckBox;
+    edtMail: TEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btn_SaveClick(Sender: TObject);
     procedure btnSearchClick(Sender: TObject);
@@ -135,6 +139,8 @@ type
     procedure FormCreate(Sender: TObject);
     procedure version1Click(Sender: TObject);
     procedure AutoRun1Click(Sender: TObject);
+    procedure Mail1Click(Sender: TObject);
+    procedure chkMailClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -175,6 +181,9 @@ var
   // Screen Size
   sc_width:Integer;
   sc_height:Integer;
+
+  //Mail
+  BodyResult,Mc,Mr,Mv,Md:String;
 
 implementation
 
@@ -264,7 +273,7 @@ begin
   Try
   begin
     for dclI := 0 to lvModuleList.Items.Count - 1 do
-  begin // loop to execute each *.kha
+    begin // loop to execute each *.kha
     if lvModuleList.Items.Item[dclI].Checked then
     begin  // checking item's checked in Module List
       aParam := lvModuleList.Items.Item[dclI].SubItems[4]; // varify value o
@@ -289,15 +298,22 @@ begin
 
 
         mExecute := mExecute + ' "' + Trim(Self.Caption) + '"' + ' "' + Trim(aParam) + '"';
-              ShowMessage(mExecute);
         _ExecuteAndWait(mExecute); //Execute one by one
 
 
 
       end;
       isCheck := True;
+
+      Md:=DateTimeToStr(Now);
+      Mc:=lvModuleList.Items.Item[dclI].SubItems[3];
+      Mr:=lvModuleList.Items.Item[dclI].SubItems[5];
+      Mv:=lvModuleList.Items.Item[dclI].SubItems[6];
+      if Length(Mv)=0 then Mv:='NULL';
+      BodyResult:=BodyResult+'No ['+IntToStr(dclI+1)+'] _ ['+Mc+'] _ ['+Mr+'] _ ['+Mv+'] _ ['+Md+']'+#13#10;
     end;
-  end;
+
+    end;
   end
   Except
     ShowMessage('dd');
@@ -528,13 +544,34 @@ begin
   end else begin
     ShowMessage('Network Invalid');
   end;
-//
 end;
 
 //Run module
 procedure TfrmScrappingTestApp.btnStartClick(Sender: TObject);
+var
+  success,i:Integer;
+  T:String;
+  sent:Boolean;
 begin
-  SendMessage(self.Handle, wm_start, 0, 0);
+  success:=  SendMessage(self.Handle, wm_start, 0, 0);
+  if success = 0 then
+  begin
+    if (chkMail.Checked) and (Length(edtMail.Text)>0) then
+    begin
+        T:='********** Module Processed **********'+#13#10;
+        T:=T+BodyResult;
+        T:=T+'********** Module Processed **********';
+        ShowMessage(edtMail.Text);
+        sent:=sendMail('kepisal@yahoo.com',edtMail.Text,'Module Process '+DateTimeToStr(now),T,'kepisal@yahoo.com','F!57664826d');
+        if (sent) then
+          ShowMessage('Sending Completed')
+        else
+          ShowMessage('Sending Fail');
+    end;
+  end
+  else MessageDlg('Execute Fail...',mtError,mbOKCancel,0);
+
+
 end;
 
 procedure TfrmScrappingTestApp.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -716,6 +753,7 @@ end;
 procedure TfrmScrappingTestApp.FormCreate(Sender: TObject);
 begin
   btnMEdit.Enabled:=False;
+  edtMail.Enabled:=False;
 end;
 
 procedure TfrmScrappingTestApp.version1Click(Sender: TObject);
@@ -728,6 +766,19 @@ var
   fln:String;
 begin
   frmTaskSchedule1.Show();
+end;
+
+procedure TfrmScrappingTestApp.Mail1Click(Sender: TObject);
+begin
+  //ShowMessage(BoolToStr(sendMail('kepisal@yahoo.com','pisal_sal@yahoo.com','test',BodyResult,'kepisal@yahoo.com','F!57664826d')));
+end;
+
+procedure TfrmScrappingTestApp.chkMailClick(Sender: TObject);
+begin
+  if chkMail.Checked then
+    edtMail.Enabled:=true
+  else
+    edtMail.Enabled:=false;
 end;
 
 end.
