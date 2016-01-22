@@ -1,10 +1,11 @@
 object frmScrappingTestApp: TfrmScrappingTestApp
   Left = 288
   Top = 130
-  Width = 1110
-  Height = 687
   BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
   Caption = 'Scrape Module Application Management'
+  ClientHeight = 586
+  ClientWidth = 989
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

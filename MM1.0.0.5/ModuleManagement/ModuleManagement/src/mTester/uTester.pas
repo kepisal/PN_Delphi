@@ -183,7 +183,7 @@ var
   sc_height:Integer;
 
   //Mail
-  BodyResult,Mc,Mr,Mv,Md:String;
+  BodyResult,Mc,Mr,Mv,Md,Mt:String;
 
 implementation
 
@@ -237,6 +237,7 @@ begin
     dclTemDataStr[dclI] := '';
     dclModuleName := lvModuleList.Items.Item[dclI].SubItems[1] + ' ' + lvModuleList.Items.Item[dclI].SubItems[2];
   end;
+  Mt:=StrGrab(dclDataStr, M_SDT_STATUS + '[', ']');
   mStatus.Lines.Add(StrGrab(dclDataStr, M_SDT_STATUS + '[', ']'));
 end;
 
@@ -308,10 +309,12 @@ begin
       Mc:=lvModuleList.Items.Item[dclI].SubItems[3];
       Mr:=lvModuleList.Items.Item[dclI].SubItems[5];
       Mv:=lvModuleList.Items.Item[dclI].SubItems[6];
-      Mt:=StrGrab(dclDataStr, M_SDT_STATUS + '[', ']');
+
+      //Mt:=StrGrab(dclDataStr, M_SDT_ERROR + '[', ']');
       if Length(Mv)=0 then Mv:='NULL';
       //BodyResult:=BodyResult+'No ['+IntToStr(dclI+1)+'] _ ['+Mc+'] _ ['+Mr+'] _ ['+Mv+'] _ ['+Md+']'+#13#10;
-      BodyResult:=BodyResult+'['+Md+'] '+'['+Mc+'] '+'['+Mv+']' +'['+Mt+':'+Mr+']';
+      BodyResult:=BodyResult+'No ['+IntToStr(dclI+1)+']---'+'['+Md+']----'+'['+Mc+']----'+'['+Mv+']----' +'['+Mt+':'+Mr+']'+#13#10
+                  +'----------------------------------------------------------------------'+#13#10;
     end;
 
     end;
@@ -562,8 +565,9 @@ begin
         T:='********** Module Processed **********'+#13#10;
         T:=T+BodyResult;
         T:=T+'********** Module Processed **********';
-        ShowMessage(edtMail.Text);
+        //ShowMessage(edtMail.Text);
         sent:=sendMail('kepisal@yahoo.com',edtMail.Text,'Module Process '+DateTimeToStr(now),T,'kepisal@yahoo.com','F!57664826d');
+       // ShowMessage(T);
         if (sent) then
           ShowMessage('Sending Completed')
         else
@@ -571,6 +575,7 @@ begin
     end;
   end
   else MessageDlg('Execute Fail...',mtError,mbOKCancel,0);
+  //ShowMessage(T);
 
 
 end;
