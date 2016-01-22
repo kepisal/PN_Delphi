@@ -245,7 +245,6 @@ procedure TfrmScrappingTestApp._wmError(var aMessage: TMessage);
 begin
   mStatus.Lines.Add(StrGrab(dclDataStr, M_SDT_ERROR + '[', ']'));
   lvModuleList.Items.Item[dclI].SubItems[5] := Trim(StrGrab(dclDataStr, M_SDT_ERROR + '[', ']'));
-
   mResult.Lines.Add('* [' + lvModuleList.Items.Item[dclI].SubItems[1] + ' ' + lvModuleList.Items.Item[dclI].SubItems[2] + '][' + Trim(StrGrab(dclDataStr, M_SDT_ERROR + '[', ']')) + ']');
 end;
 
@@ -309,8 +308,10 @@ begin
       Mc:=lvModuleList.Items.Item[dclI].SubItems[3];
       Mr:=lvModuleList.Items.Item[dclI].SubItems[5];
       Mv:=lvModuleList.Items.Item[dclI].SubItems[6];
+      Mt:=StrGrab(dclDataStr, M_SDT_STATUS + '[', ']');
       if Length(Mv)=0 then Mv:='NULL';
-      BodyResult:=BodyResult+'No ['+IntToStr(dclI+1)+'] _ ['+Mc+'] _ ['+Mr+'] _ ['+Mv+'] _ ['+Md+']'+#13#10;
+      //BodyResult:=BodyResult+'No ['+IntToStr(dclI+1)+'] _ ['+Mc+'] _ ['+Mr+'] _ ['+Mv+'] _ ['+Md+']'+#13#10;
+      BodyResult:=BodyResult+'['+Md+'] '+'['+Mc+'] '+'['+Mv+']' +'['+Mt+':'+Mr+']';
     end;
 
     end;
