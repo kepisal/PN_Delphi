@@ -58,8 +58,8 @@ interface
 uses
   Windows, Messages, SysUtils, Forms, Dialogs, Classes, ExtCtrls, Controls,
   IniFiles, StdCtrls, ComCtrls, Menus, uMethod, Seed, mTypes, Grids, ValEdit,
-  aResult, mParam, uReadky, ufrmInformation,uWebagent,GetKHAVersion,uMethododl,ShellAPI,uTaskSchedule,uYahooMail,EASendMailObjLib_TLB,
-  CheckLst;
+  aResult, mParam, uReadky, ufrmInformation,uWebagent,GetKHAVersion,uMethododl,
+  ShellAPI,uTaskSchedule,uYahooMail,EASendMailObjLib_TLB,UTblCreate,CheckLst;
 
 const
   // Send Message Codes to perform each task
@@ -185,6 +185,9 @@ var
   //Mail
   BodyResult,Mc,Mr,Mv,Md,Mt:String;
 
+  //Table
+  DTable:TDrawTable;
+
 implementation
 
 uses
@@ -267,6 +270,12 @@ var
   mExecute, aParam: string;
   isCheck: Boolean;
 begin
+  DTable:=TDrawTable.create;
+
+
+  ShowMessage(tfilename);
+  DTable.initTbl();
+  
   mResult.Lines.Clear;
   mStatus.Lines.Clear;
   isCheck := False;
@@ -298,6 +307,7 @@ begin
 
 
         mExecute := mExecute + ' "' + Trim(Self.Caption) + '"' + ' "' + Trim(aParam) + '"';
+        //ShowMessage(mExecute);
         _ExecuteAndWait(mExecute); //Execute one by one
 
 
@@ -312,16 +322,20 @@ begin
 
       //Mt:=StrGrab(dclDataStr, M_SDT_ERROR + '[', ']');
       if Length(Mv)=0 then Mv:='NULL';
+
+      DTable.drawRow(IntToStr(dclI+1),Md,Mc,Mv,Mt,Mr);
       //BodyResult:=BodyResult+'No ['+IntToStr(dclI+1)+'] _ ['+Mc+'] _ ['+Mr+'] _ ['+Mv+'] _ ['+Md+']'+#13#10;
-      BodyResult:=BodyResult+'No ['+IntToStr(dclI+1)+']---'+'['+Md+']----'+'['+Mc+']----'+'['+Mv+']----' +'['+Mt+':'+Mr+']'+#13#10
-                  +'----------------------------------------------------------------------'+#13#10;
+      {BodyResult:=BodyResult+'No ['+IntToStr(dclI+1)+']---'+'['+Md+']----'+'['+Mc+']----'+'['+Mv+']----' +'['+Mt+':'+Mr+']'+#13#10
+                  +'----------------------------------------------------------------------'+#13#10;}
+      
     end;
 
     end;
   end
   Except
     ShowMessage('dd');
-  End; 
+  End;
+
   if not isCheck then
     MessageBox(0, PChar('Please choose the module that you want to run!'), '', MB_OK + MB_ICONINFORMATION);
 end;
@@ -554,31 +568,32 @@ end;
 procedure TfrmScrappingTestApp.btnStartClick(Sender: TObject);
 var
   success,i:Integer;
-  T:String;
+  T:UTF8String;
+  UTS:TStrings;
   sent:Boolean;
 begin
   success:=  SendMessage(self.Handle, wm_start, 0, 0);
+
+  DTable.saveToFile;
   if success = 0 then
   begin
     if (chkMail.Checked) and (Length(edtMail.Text)>0) then
     begin
-        T:='********** Module Processed **********'+#13#10;
-        T:=T+BodyResult;
-        T:=T+'********** Module Processed **********';
-        //ShowMessage(edtMail.Text);
-        sent:=sendMail('kepisal@yahoo.com',edtMail.Text,'Module Process '+DateTimeToStr(now),T,'kepisal@yahoo.com','F!57664826d');
-       // ShowMessage(T);
+        sent:=sendMail('scrape3rd@yahoo.com',edtMail.Text,'Module Process on '+DateTimeToStr(now),'Information store in attach file','scrape3rd@yahoo.com','G_3rdscrape',tfilename);
+        end;
+
+        //ShowMessage(T);
         if (sent) then
           ShowMessage('Sending Completed')
         else
           ShowMessage('Sending Fail');
     end;
-  end
-  else MessageDlg('Execute Fail...',mtError,mbOKCancel,0);
+  end;
+  //else MessageDlg('Execute Fail...',mtError,mbOKCancel,0);
   //ShowMessage(T);
 
 
-end;
+//end;
 
 procedure TfrmScrappingTestApp.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -757,7 +772,17 @@ begin
 end;
 
 procedure TfrmScrappingTestApp.FormCreate(Sender: TObject);
+var
+  s : WideString;
 begin
+          //ShowMessage(Application.ExeName);
+  {s := '*****************************************************************' + #13#10 +
+       '*  #  *   Name      *     code      *      version     * status *' + #13#10 +
+       '*****************************************************************' ;
+  //ShowMessage(s); }
+
+  //uSaveFile('table.txt',s);
+  //sendMail('kepisal@yahoo.com','kepisal@gmail.com','Module Process '+DateTimeToStr(now),'Body Null','kepisal@yahoo.com','F!57664826d',Application.ExeName);
   btnMEdit.Enabled:=False;
   edtMail.Enabled:=False;
 end;
