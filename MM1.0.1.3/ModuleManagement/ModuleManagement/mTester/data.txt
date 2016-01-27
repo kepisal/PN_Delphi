@@ -1,7 +1,0 @@
-[0]={userName="fYTjqd85btXIuwrzBrD6nw==",password="fYTjqd85btXIuwrzBrD6nw=="}
-[1]={userName="Tg6oKOao3fuC3P8XMsv6Ig==",password="PpBPSMd5CLfXVoknSmhzLQ=="}
-[2]={userName="f1WRgbWVEB9zpk8du3tw3Q==",password="f1WRgbWVEB9zpk8du3tw3Q=="}
-[3]={userName="P+iR0mj+WqRWVn9X+u4KDQ==",password="P+iR0mj+WqRWVn9X+u4KDQ=="}
-[4]={userName="BUdq8CP84nJq1/vXtCyAAA==",password="BUdq8CP84nJq1/vXtCyAAA=="}
-[5]={userName="S6NDEUFzzzEnI57jCkrV0A==",password="S6NDEUFzzzEnI57jCkrV0A=="}
-[6]={userName="lz+hpzvvlqeuDTkvWAuxdw==",password="f1WRgbWVEB9zpk8du3tw3Q=="}
