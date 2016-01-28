@@ -21,16 +21,22 @@ type
     dtpTime: TDateTimePicker;
     CheckListBox1: TCheckListBox;
     Label1: TLabel;
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
     btnRemoveTask: TButton;
     lbl: TLabel;
     edtMailTo: TEdit;
+=======
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
     procedure FormCreate(Sender: TObject);
     procedure rgOptionClick(Sender: TObject);
     function  createTasks(index:Byte):String;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure cbbBeginTaskChange(Sender: TObject);
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
     procedure btnRemoveTaskClick(Sender: TObject);
+=======
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
   private
     { Private declarations }
   public
@@ -159,7 +165,10 @@ var
   Reg: TRegIniFile;
 begin
   localTime:=Now;
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
   //temp:=DateToStr(localTime) ;
+=======
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
   fln:=Application.ExeName;
   stime:=ConvertTime12To24(TimeToStr(dtpTime.time));
   sdate:=DateToStr(dtpDateTime.Date);
@@ -177,10 +186,30 @@ case index of
       Query:='/Create /SC '+getOption(index)+' /D '+GetSelectedCheckboxValue(CheckListBox1)+' /TN "'+TN+'" /TR "'+fln+'" /ST '+stime+' /f';
     end;
   3: begin // ON LOGON
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
       Query:='/Create /SC '+getValueComboBox(cbbBeginTask.ItemIndex)+' /TN "'+TN+'" /TR "'+fln+'" /f';
     end;
   4: begin // ONSTART
      SetAutoStart_REG(fln,'MTester',true);
+=======
+    buttonSelected := messagedlg('Task Updated : '+getValueComboBox(cbbBeginTask.ItemIndex),mtWarning, mbOKCancel, 0);
+      if buttonSelected = mrOK then
+      begin
+         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getValueComboBox(cbbBeginTask.ItemIndex)+' /TN "'+TN+'" /TR "'+fln+'" /f'),nil,SW_HIDE);
+         //SchTasks /Create /SC WEEKLY /D MON,TUE,WED,THU,FRI /TN “My Task” /TR “C:RunMe.bat” /ST 14:00
+      end;
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
+    end;
+  4: begin // ONSTART
+    buttonSelected := messagedlg('Task Updated : '+getValueComboBox(cbbBeginTask.ItemIndex),mtWarning, mbOKCancel, 0);
+    temp:= GetEnvironmentVariable('COMPUTERNAME');
+    temp := temp+'\'+ GetEnvironmentVariable('USERNAME');
+    ShowMessage(temp);
+      if buttonSelected = mrOK then
+      begin
+         ShellExecute(0,'runas','SchTasks',pansichar('/Create /SC '+getValueComboBox(cbbBeginTask.ItemIndex)+' /TN "'+TN+'" /TR "'+fln+'" /RU '+temp+' /f'),nil,SW_HIDE);
+         //schtasks /create /sc onstart /tn "home" /tr "c:\..\M" /ru Pisal-PC\Pisal /f
+      end;
     end;
   end;
   buttonSelected := messagedlg('Task Updated : '+getValueComboBox(cbbBeginTask.ItemIndex),mtWarning, mbOKCancel, 0);
@@ -197,9 +226,15 @@ var
 
 begin
   case cbbBeginTask.ItemIndex of
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
   0 : begin AutoR:= createTasks(rgOption.ItemIndex); end;
   1 : begin AutoR:=createTasks(3);end;
   2 : begin AutoR:=createTasks(4);end;
+=======
+  0 : begin createTasks(rgOption.ItemIndex); end;
+  1 : begin createTasks(3);end;
+  2 : begin createTasks(4);end;
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
   end;
   {if Trim(AutoR)<>'' then
     AutoR:='autorun=[1]_0_"'+edtMailTo.Text+'"';
@@ -242,6 +277,7 @@ begin
   end ;
   
 end;
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
 procedure TfrmTaskSchedule1.btnRemoveTaskClick(Sender: TObject);
 var
   buttonSelected :Integer;
@@ -257,4 +293,6 @@ begin
         end;
 end;
 
+=======
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.pas
 end.

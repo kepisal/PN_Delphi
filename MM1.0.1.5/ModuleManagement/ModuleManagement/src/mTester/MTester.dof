@@ -114,8 +114,13 @@ IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=1
 MinorVer=0
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/MTester.dof
 Release=1
 Build=5
+=======
+Release=0
+Build=8
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/MTester.dof
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +131,11 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=KSHRD
 FileDescription=Module Management
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/MTester.dof
 FileVersion=1.0.1.5
+=======
+FileVersion=1.0.0.8
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/MTester.dof
 InternalName=
 LegalCopyright=Delphi Team
 LegalTrademarks=Delphi Team

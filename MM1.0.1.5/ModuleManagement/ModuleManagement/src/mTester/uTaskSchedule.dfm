@@ -1,6 +1,11 @@
 object frmTaskSchedule1: TfrmTaskSchedule1
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.dfm
   Left = 637
   Top = 269
+=======
+  Left = 734
+  Top = 224
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.dfm
   BorderStyle = bsDialog
   Caption = 'Task Schedule'
   ClientHeight = 271
@@ -36,6 +41,7 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Font.Style = []
       ParentFont = False
     end
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.dfm
     object lbl: TLabel
       Left = 232
       Top = 24
@@ -43,6 +49,8 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Height = 13
       Caption = 'Mail To :'
     end
+=======
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.dfm
     object rgOption: TRadioGroup
       Left = 8
       Top = 48
@@ -142,6 +150,7 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       TabOrder = 4
       OnClick = btnCancelClick
     end
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.dfm
     object btnRemoveTask: TButton
       Left = 96
       Top = 216
@@ -158,5 +167,7 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Height = 21
       TabOrder = 6
     end
+=======
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uTaskSchedule.dfm
   end
 end

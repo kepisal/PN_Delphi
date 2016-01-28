@@ -1,6 +1,11 @@
 object frmScrappingTestApp: TfrmScrappingTestApp
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uTester.dfm
   Left = 339
   Top = 119
+=======
+  Left = 55
+  Top = 14
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uTester.dfm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Scrape Module Application Management'

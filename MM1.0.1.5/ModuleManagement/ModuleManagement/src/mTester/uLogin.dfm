@@ -1,6 +1,11 @@
 object frmlogin: Tfrmlogin
+<<<<<<< HEAD:MM1.0.1.5/ModuleManagement/ModuleManagement/src/mTester/uLogin.dfm
   Left = 633
   Top = 245
+=======
+  Left = 642
+  Top = 243
+>>>>>>> origin/master:MM1.0.0.5/ModuleManagement/ModuleManagement/src/mTester/uLogin.dfm
   BorderStyle = bsDialog
   ClientHeight = 230
   ClientWidth = 258
