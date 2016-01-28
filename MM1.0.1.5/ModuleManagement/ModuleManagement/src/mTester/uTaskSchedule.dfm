@@ -36,6 +36,13 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Font.Style = []
       ParentFont = False
     end
+    object lbl: TLabel
+      Left = 232
+      Top = 24
+      Width = 41
+      Height = 13
+      Caption = 'Mail To :'
+    end
     object rgOption: TRadioGroup
       Left = 8
       Top = 48
@@ -107,7 +114,7 @@ object frmTaskSchedule1: TfrmTaskSchedule1
     object cbbBeginTask: TComboBox
       Left = 96
       Top = 16
-      Width = 329
+      Width = 129
       Height = 21
       ItemHeight = 13
       TabOrder = 2
@@ -143,6 +150,13 @@ object frmTaskSchedule1: TfrmTaskSchedule1
       Caption = 'Remove Task'
       TabOrder = 5
       OnClick = btnRemoveTaskClick
+    end
+    object edtMailTo: TEdit
+      Left = 280
+      Top = 16
+      Width = 145
+      Height = 21
+      TabOrder = 6
     end
   end
 end

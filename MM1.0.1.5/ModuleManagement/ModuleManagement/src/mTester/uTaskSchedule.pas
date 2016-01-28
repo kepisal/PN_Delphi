@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, StdCtrls, ExtCtrls, CommCtrl,uMethod,shellAPI,Registry,
+  Dialogs, ComCtrls, StdCtrls, ExtCtrls, CommCtrl,uMethod,shellAPI,Registry,uMethododl,
   CheckLst,Seed;
 
 type
@@ -22,6 +22,8 @@ type
     CheckListBox1: TCheckListBox;
     Label1: TLabel;
     btnRemoveTask: TButton;
+    lbl: TLabel;
+    edtMailTo: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure rgOptionClick(Sender: TObject);
     function  createTasks(index:Byte):String;
@@ -48,93 +50,17 @@ var
   AutoR:String;
 {$R *.dfm}
 
-function EncryptString(source: string):String;
-var
-  textString: string;
-  F: TextFile;
-  fileini:String;
-begin
-  fileini:='auto.ini';
-  AssignFile(F, fileini);
-  ReWrite(F);
-  textString := SeedEncToBase64(fileini, source);
-  Write(F, textString);
-  //Write(F, source);
-  CloseFile(F);
-  Result := 'Success';
-end;
-
-procedure RemoveEntryFromRegistry(AppName:String);
-var key: string;
-     Reg: TRegIniFile;
-begin
-  key := '\Software\Microsoft\Windows\CurrentVersion\Run';
-  Reg:=TRegIniFile.Create;
-try
-  Reg.RootKey:=HKey_Local_Machine;
-  if Reg.OpenKey(Key,False) then Reg.DeleteValue(AppName);
-  finally
-  Reg.Free;
-  end;
-end;
-
-procedure SetAutoStart(AppName, AppTitle: string; bRegister: Boolean);
-const
-  RegKey = '\Software\Microsoft\Windows\CurrentVersion\Run';
-  // or: RegKey = '\Software\Microsoft\Windows\CurrentVersion\RunOnce';
-var
-  Registry: TRegistry;
-begin
-  Registry := TRegistry.Create;
-  try
-    Registry.RootKey := HKEY_LOCAL_MACHINE;
-    if Registry.OpenKey(RegKey, False) then
-    begin
-      if bRegister = False then
-        Registry.DeleteValue(AppTitle)
-      else
-        Registry.WriteString(AppTitle, AppName);
-    end;
-  finally
-    Registry.Free;
-  end;
-end;
-
 function getValueComboBox(index:Integer):String;
 var
   temp:String;
 begin
 
   case index of
-  0 : temp:='ON SCHEDULE';
-  1 : temp:='ON LOGON';
-  2 : temp:='ON START';
+  0 : temp:='ONSCHEDULE';
+  1 : temp:='ONLOGON';
+  2 : temp:='ONSTART';
   end;
   Result:=temp;
-end;
-
-function DecryptString(): string;
-var
-  text, temp,fullFileName,fileini: string;
-  F: TextFile;
-begin
-  fileini:='auto.ini';
-  fullFileName:=Application.ExeName;
-  fullFileName:=ExtractFilePath(fullFileName)+fileini;
-  //ShowMessage(fullFileName);
-  AssignFile(F, fullFileName);
-  // Reopen the file for reading
-  Reset(F);
-
-  // Display the file contents
-  while not Eof(F) do
-  begin
-    ReadLn(F, text);
-    temp := temp + text;
-  end;
-  // Close the file for the last time
-  CloseFile(F);
-  Result := SeedDecFromBase64(fileini, temp);
 end;
 
 procedure TfrmTaskSchedule1.FormCreate(Sender: TObject);
@@ -146,9 +72,9 @@ begin
   btnOk.Enabled:=False;
 
   
-  if (StrToInt(StrGrab(DecryptString,'[',']'))<>0) then // auto turn on
+  {if (StrToInt(StrGrab(DecryptString,'[',']'))<>0) then // auto turn on
   begin
-
+    FileDecryption(ExtractFilePath(Application.ExeName)+'auto.ini'
     frmScrappingTestApp.Show();
   end;
     {SendMessage(self.Handle, wm_search, 0, 0);
@@ -242,8 +168,7 @@ begin
 
 case index of
   0: begin // one time
-      Query:='/Create /SC '+getOption(index)+' '+getValueComboBox(cbbBeginTask.ItemIndex)+' /TN "'+TN+'" /TR "'+fln+'" /ST '+stime+' /f';
-
+      Query:='/Create /SC '+getOption(index)+' /TN "'+TN+'" /TR "'+fln+'" /ST '+stime+' /f';
       end;
   1: begin // DAILY time
       Query:='/Create /SC '+getOption(index)+' /TN "'+TN+'" /TR "'+fln+'" /ST '+stime+' /f';
@@ -255,7 +180,7 @@ case index of
       Query:='/Create /SC '+getValueComboBox(cbbBeginTask.ItemIndex)+' /TN "'+TN+'" /TR "'+fln+'" /f';
     end;
   4: begin // ONSTART
-    SetAutoStart(fln,'MTester',true);
+     SetAutoStart_REG(fln,'MTester',true);
     end;
   end;
   buttonSelected := messagedlg('Task Updated : '+getValueComboBox(cbbBeginTask.ItemIndex),mtWarning, mbOKCancel, 0);
@@ -276,9 +201,9 @@ begin
   1 : begin AutoR:=createTasks(3);end;
   2 : begin AutoR:=createTasks(4);end;
   end;
-  if Trim(AutoR)<>'' then
-    AutoR:='autorun=[1]';
-      ShowMessage(EncryptString(AutoR));
+  {if Trim(AutoR)<>'' then
+    AutoR:='autorun=[1]_0_"'+edtMailTo.Text+'"';
+    FileEncryption(ExtractFilePath(Application.ExeName)+'auto.ini','auto.ini',AutoR);}
 
 end;
 
@@ -294,6 +219,7 @@ begin
   if i= 0 then
   begin
     rgOption.Enabled:=True;
+    rgOption.ItemIndex:=0;
     dtpDateTime.Enabled:=True;
     dtpTime.Enabled:=True;
     btnOk.Enabled:=True;
@@ -326,11 +252,9 @@ begin
         begin
         ShellExecute(0,'runas','SchTasks',pansichar(' /Delete /TN "'+TN+'" /f'),nil,SW_HIDE);
         RemoveEntryFromRegistry('MTester');
-        AutoR:='autorun=[0]';
-        ShowMessage(EncryptString(AutoR));
+        AutoR:='autorun=[0]_1_';
+        FileEncryption(ExtractFilePath(Application.ExeName)+'auto.ini','auto.ini',AutoR);
         end;
-
-
 end;
 
 end.

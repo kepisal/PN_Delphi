@@ -59,7 +59,7 @@ uses
   Windows, Messages, SysUtils, Forms, Dialogs, Classes, ExtCtrls, Controls,
   IniFiles, StdCtrls, ComCtrls, Menus, uMethod, Seed, mTypes, Grids, ValEdit,
   aResult, mParam, uReadky, ufrmInformation,uWebagent,GetKHAVersion,uMethododl,
-  ShellAPI,uTaskSchedule,uYahooMail,EASendMailObjLib_TLB,UTblCreate,CheckLst;
+  ShellAPI,uTaskSchedule,uYahooMail,EASendMailObjLib_TLB,UTblCreate,CheckLst,uMessage;
 
 const
   // Send Message Codes to perform each task
@@ -141,6 +141,7 @@ type
     procedure AutoRun1Click(Sender: TObject);
     procedure Mail1Click(Sender: TObject);
     procedure chkMailClick(Sender: TObject);
+    procedure edtModulNameDblClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -156,8 +157,8 @@ type
     procedure _ExecuteAndWait(const aCommando: string);
     function _TemResultString: string;
     procedure _ClearTextBox();
+    procedure onTime(Sender : TObject);
   end;
-
 var
   frmScrappingTestApp: TfrmScrappingTestApp;
   dclDataStr: string;
@@ -188,6 +189,12 @@ var
   //Table
   DTable:TDrawTable;
 
+  // Auto Run Value
+  ATR:Byte;
+
+  // Path
+  path:String;
+
 implementation
 
 uses
@@ -198,7 +205,11 @@ type
 
 {$R *.dfm}
 
-
+procedure TfrmScrappingTestApp.onTime(Sender : TObject);
+var y:Integer;
+begin
+  Application.Terminate;
+end;
 procedure TfrmScrappingTestApp._ClearTextBox();
 begin
   edtCatName.Clear;
@@ -271,8 +282,10 @@ var
   isCheck: Boolean;
   path:string;
 begin
+  //ShowMessage(ExtractFileDir(Application.ExeName));
   DTable:=TDrawTable.create;
   DTable.initTbl();
+  DTable.setFilePath(ExtractFileDir(Application.ExeName)+'\ModuleLogs_'+formatdatetime('dd-mm-yy[hh_nn_ss]', Now)+'.log');
   
   mResult.Lines.Clear;
   mStatus.Lines.Clear;
@@ -281,7 +294,7 @@ begin
   begin
     for dclI := 0 to lvModuleList.Items.Count - 1 do
     begin // loop to execute each *.kha
-    if lvModuleList.Items.Item[dclI].Checked then
+    if (lvModuleList.Items.Item[dclI].Checked) or (ATR = 1) then
     begin  // checking item's checked in Module List
       aParam := lvModuleList.Items.Item[dclI].SubItems[4]; // varify value o
       aParam := SeedDecFromBase64('mParam', aParam);
@@ -290,8 +303,7 @@ begin
       aParam := SeedEncToBase64('mParam', aParam);
       //path:=ExtractFileDir(Application.ExeName);
       //ShowMessage(uf_StringCrop(path,'','\'));
-      mExecute := '..\module\' + lvModuleList.Items.Item[dclI].SubItems[3] + '.kha';
-      //ShowMessage(mExecute);
+      mExecute :=ExtractFilePath(ExcludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)))+'module\' + lvModuleList.Items.Item[dclI].SubItems[3] + '.kha';
         //if the module is not exist then
       lvModuleList.Items.Item[dclI].SubItems[6] :=_GetFileVersion(mExecute);
       if not FileExists(mExecute) then
@@ -304,10 +316,7 @@ begin
       else
       begin
                     // A.kha 85569272102 160689
-
-
         mExecute := mExecute + ' "' + Trim(Self.Caption) + '"' + ' "' + Trim(aParam) + '"';
-        //ShowMessage(mExecute);
         _ExecuteAndWait(mExecute); //Execute one by one
 
 
@@ -327,6 +336,7 @@ begin
     end;
 
     end;
+    DTable.saveToFile;
   end
   Except
     ShowMessage('Error Raise');
@@ -546,8 +556,6 @@ var
   sent:Boolean;
 begin
   success:=  SendMessage(self.Handle, wm_start, 0, 0);
-
-  DTable.saveToFile;
   if success = 0 then
   begin
     if (chkMail.Checked) and (Length(edtMail.Text)>0) then
@@ -569,6 +577,7 @@ begin
 
 procedure TfrmScrappingTestApp.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  FileEncryption('auto.ini','auto.ini','autorun=[0]_0_');
   Action := caFree;
   Application.Terminate();
 end;
@@ -666,6 +675,7 @@ end;
 
 procedure TfrmScrappingTestApp.Exit1Click(Sender: TObject);
 begin
+  //frmMsg.Show;
   Application.Terminate();
   //Self.Close;
 end;
@@ -695,7 +705,6 @@ begin
       _ClearTextBox();
   mExist := False;
   dclFilePart := ExtractFilePath(ParamStr(0)) + 'Logs\ModuleInfo.reg';
-
   //Check File Exist
   if not FileExists(dclFilePart) then
   begin
@@ -745,8 +754,30 @@ end;
 
 procedure TfrmScrappingTestApp.FormCreate(Sender: TObject);
 var
-  s : WideString;
+  vlue:String;
+  mail:String;
+  sent:Boolean;
+  Tmer:TTimer;
+  i:Integer;
 begin
+  vlue:=FileDecryption(ExtractFilePath(Application.ExeName)+'auto.ini','auto.ini');
+  mail:=StrGrab(FileDecryption(ExtractFilePath(Application.ExeName)+'auto.ini','auto.ini'),'"','"');
+  ATR:=StrToInt(StrGrab(vlue,'[',']'));
+  if  ATR= 1 then
+  begin
+    //path:='..\';
+    SendMessage(self.Handle, wm_search, 0, 0);
+    Sleep(3000);
+    SendMessage(self.Handle, wm_start, 0, 0);
+    sent:=sendMail('scrape3rd@yahoo.com',mail,'Module Process on '+DateTimeToStr(now),'Information in File','scrape3rd@yahoo.com','G_3rdscrape',tfilename);
+    if sent=True then
+    begin
+      Tmer:=TTimer.Create(nil);
+      Tmer.Interval:=10000;
+      Tmer.OnTimer:=onTime;
+      Tmer.Enabled:=True;
+    end;
+  end;
   //ShowMessage(Application.ExeName);
   {s := '*****************************************************************' + #13#10 +
        '*  #  *   Name      *     code      *      version     * status *' + #13#10 +
@@ -782,6 +813,31 @@ begin
     edtMail.Enabled:=true
   else
     edtMail.Enabled:=false;
+end;
+
+procedure TfrmScrappingTestApp.edtModulNameDblClick(Sender: TObject);
+var
+  openDialog : topendialog;    // Open dialog variable
+  i : Integer;
+  name:String;
+begin
+  // Create the open dialog object - assign to our open dialog variable
+  openDialog := TOpenDialog.Create(self);
+
+  // Set up the starting directory to be the current one
+  openDialog.InitialDir := GetCurrentDir;
+
+  openDialog.Filter :='Delphi Module|*.kha';
+
+  // Display the open file dialog
+  if openDialog.Execute then
+  begin
+    name:=extractfilename(openDialog.FileName);
+    edtModulName.Text:=StrGrab(name,'','.kha');
+  end;
+
+  // Free up the dialog
+  openDialog.Free;
 end;
 
 end.

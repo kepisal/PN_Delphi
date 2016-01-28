@@ -1,10 +1,10 @@
 object frmScrappingTestApp: TfrmScrappingTestApp
-  Left = 306
-  Top = 120
+  Left = 339
+  Top = 119
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Scrape Module Application Management'
-  ClientHeight = 586
+  ClientHeight = 587
   ClientWidth = 989
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
@@ -100,6 +100,7 @@ object frmScrappingTestApp: TfrmScrappingTestApp
         Height = 21
         ImeName = 'Microsoft IME 2010'
         TabOrder = 3
+        OnDblClick = edtModulNameDblClick
       end
       object edtParam: TEdit
         Left = 96

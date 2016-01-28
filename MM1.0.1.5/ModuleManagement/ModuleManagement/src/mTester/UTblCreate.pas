@@ -23,6 +23,7 @@ type
     procedure initTbl();
     procedure drawRow(colNo,colDate,colMcode,colMVersion,colMStatus,colMResult:string);
     procedure saveToFile();
+    procedure setFilePath(Path:String);
 
   end;
 
@@ -34,11 +35,14 @@ type
 implementation
 
     {implementation block code from interface block}
-
+procedure TDrawTable.setFilePath(Path:String);
+begin
+   tfilename:=Path;
+end;
     // To draw all columns in a row
 constructor TDrawTable.create();
 begin
-  tfilename:= 'Logs\ModuleLogs_'+formatdatetime('dd-mm-yy[hh_nn_ss]', Now)+'.log';
+  //
   strHeader[0]:='0';
   //AssignFile(myFile,tfilename);
 
@@ -113,8 +117,9 @@ procedure TDrawTable.drawColumn(s : array of string);
  begin
    
    AssignFile(myFile,tfilename);
+   //Reset(myFile);
    {if FileExists(tfilename) then
-    Append(myFile)
+    Rewrite(myFile)
    else}
     Rewrite(myFile);
 
